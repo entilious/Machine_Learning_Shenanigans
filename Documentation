@@ -1,0 +1,103 @@
+Project Area of Study - Predictive Analysis
+
+Project - Using predictive analysis through ML to create a model that predicts whether a flight will be delayed based on certain features (parameters).
+
+Methodology -
+
+    1. Dataset
+        The dataset chosen for this project is the Airline Delay and Cancellation Delay data from the years 2009 to 2018.
+        [Source: https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018/data]
+
+        Columns present in the dataset -
+
+        1. FL_DATE - Date of the flight, yy/mm/dd
+        2. OP_CARRIER - Airline Identifier
+        3. OP_CARRIER_FL_NUM - Flight Number
+        4. ORIGIN - Starting Airport Code
+        5. DEST - Destination Airport Code
+        6. CRS_DEP_TIME - Planned Departure Time
+        7. DEP_TIME - Actual Departure Time
+        8. DEP_DELAY - Total Delay on Departure in minutes
+        9. TAXI_OUT - The time duration elapsed between departure from the origin airport gate and wheels off
+        10. WHEELS_OFF - The time point that the aircraft's wheels leave the ground
+        11. WHEELS_ON - The time point that the aircraft's wheels touch on the ground
+        12. TAXI_IN - The time duration elapsed between wheels-on and gate arrival at the destination airport
+        13. CRS_ARR_TIME - Planned arrival time
+        14. ARR_TIME - Actual Arrival Time
+        15. ARR_DELAY - Total Delay on Arrival in minutes
+        16. CANCELLED - Flight Cancelled (1 = cancelled)
+        17. CANCELLATION_CODE - Reason for Cancellation of flight: A - Airline/Carrier; B - Weather; C - National Air System; D - Security
+        18. DIVERTED - Aircraft landed on airport that out of schedule
+        19. CRS_ELAPSED_TIME - Planned time amount needed for the flight trip
+        20. ACTUAL_ELAPSED_TIME - AIR_TIME+TAXI_IN+TAXI_OUT
+        21. AIR_TIME - The time duration between wheels_off and wheels_on time
+        22. DISTANCE - Distance between two airports
+        23. CARRIER_DELAY - Delay caused by the airline in minutes
+        24. WEATHER_DELAY - Delay caused by weather
+        25. NAS_DELAY - Delay caused by air system
+        26. SECURITY_DELAY - Delay caused by security
+        27. LATE_AIRCRAFT_DELAY
+        28 Unnamed - useless column
+
+    2. Data Pre-Processing
+        The entire dataset is not exactly useful in training the model as it contains NaN values at given instances and the presence
+        of unnecessary columns or columns containing redundant data, i.e. 'FL_DATE' and 'OP_CARRIER', are to be removed in the pre-processing.
+
+        The columns removed from the initial dataset are -
+
+        1. FL_DATE
+        2. OP_CARRIER
+        3. OP_CARRIER_FL_NUM
+        4. CANCELLATION_CODE
+        5. Unnamed: 27
+
+        The removed columns have no use in training the model whatsoever, so evicted they are.
+
+        According to the FAA, the columns 'CARRIER_DELAY', 'WEATHER_DELAY', 'NAS_DELAY', 'SECURITY_DELAY', 'LATE_AIRCRAFT_DELAY' play a significant role in causing delay.
+
+        [Source: t̶r̶u̶s̶t̶ m̶e̶ b̶r̶o̶ https://www.transtats.bts.gov/OT_Delay/OT_DelayCause1.asp]
+
+        Thus the columns are also considered for training the model. Given, how these columns contain instances of NULL values. The rows containing NULL values for these columns are removed
+
+        Apart from that the model also takes into account the possibility that the airports themselves may be the cause of delay because of the way they operate. Certain airports and routes
+        are known to be "delayed" and thus they too are to be taken into account when training the model. However, given how the geographical location of the origin and destination airports
+        in the dataset is confined to the US of A, the columns 'ORIGIN' and 'DEST' have been exempted from being a part of the training dataset. Nonetheless, it would be wise to include them if
+        dataset is not confined to a single geographical location.
+
+        After making the aforementioned changes to the original dataset (finalmente.csv), the obtained dataset is then used to create the class-wise instances. 0 represents on-time flights, 1 represents delayed flights.
+        Given how a flight is declared "Delayed" if it is 15 minutes late in departing or arriving, the same principle will be used to declare the class instance for each row.
+
+       2. Proposed Models
+            1. XGBoost Classifier
+            2. Decision Tree Classifier
+            3. Random Forest Classifier
+            4. Hist-Gradient Boost Classifier
+            5. Logistic Regression Classifier
+
+       3. Pre-split cleaning
+
+            The 'final_dataset.csv' is further cleaned to remove the columns containing information regarding arrival as the
+            information in these columns will not be available when making real-time predictions.
+            [I know this could've been done in pre-processing, but me lazy and forgetful so here we are.]
+
+            After which, the dataset is now to be balanced as the number of instances in 'Delayed' column for 0 and 1 are heavily imbalanced.
+
+            0 - 1045706
+            1 - 2869
+
+            Using 'RandomUnderSampler' from 'imblearn' package, the dataset is now balanced and saved as 'finale_undersampled_ds.csv'.
+            The instances of 0 and 1 in the 'Delayed' column are balanced.
+
+            0 - 20839
+            1 - 20839
+
+3. Model Testing
+
+    The data in 'finale_undersampled_ds.csv' is split using the 80:20 rule for training and testing.
+    The feature columns are assigned to the variable 'x' while the class column is assigned to 'y'.
+    The aforementioned models were tested using the same dataset after splitting. Accuracy and Confusion matrix for the models
+    can be found in 'Model-wise accuracies.docx' and 'Model Confusion Matrices' [folder] respectively.
+
+    P.S. I recommend using Logistic Regression Classifier as your model as it shows some error which is more believable than having a 100% accurate model.
+         Nonetheless, you can show that you tested so and so models.
+
